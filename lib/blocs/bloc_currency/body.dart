@@ -177,12 +177,14 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
                   widget.currencyModel?[secondIndex].codeTo.toString();
               secondRate = widget.currencyModel?[secondIndex].rate.toString();
               var first = widget.currencyModel?[firstIndex].rate;
+              var fistDev = first!/firstUnit!;
               var second = widget.currencyModel![secondIndex].rate;
-              secondDivision = (second! / first!)*firstUnit!;
-              division = first / second;
+              var secondDev = second!/secondUnit!;
+              secondDivision = (secondDev / fistDev)*secondUnit!;
+              division = fistDev / secondDev;
               var two = int.parse(_firstFromController.text);
-              sum = (two * division!)/firstUnit!;
-              firstOneRate = division! * secondUnit!;
+              sum = two * division!;
+              firstOneRate = division! * firstUnit!;
             });
           },
           items: secondListCurrency
