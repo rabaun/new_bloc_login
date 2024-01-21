@@ -42,10 +42,12 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
   double? sum = 0;
   String? firstCodeTo = '0';
   String? secondCodeTo = '0';
-  String? firstUnit;
-  String? secondUnit;
+  int? firstUnit;
+  int? secondUnit;
   String? secondRate = '0';
   DateTime now = DateTime.now();
+  double? firstOneRate = 0;
+  double? secondDivision = 0;
 
   Future<String?> _firstLoadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
@@ -168,17 +170,19 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
               currency = value!;
               _secondSetLanguage(value.toString());
               secondIndex = secondListCurrency?.indexOf(value) ?? 0;
-              var first = widget.currencyModel?[firstIndex].rate;
-              var second = widget.currencyModel![secondIndex].rate;
-              division = first! / second!;
-              var two = int.parse(_firstFromController.text);
-              sum = (two * division!);
-              firstUnit = widget.currencyModel?[firstIndex].unit.toString();
-              secondUnit = widget.currencyModel?[secondIndex].unit.toString();
-              firstCodeTo = widget.currencyModel?[firstIndex].codeTo.toString();
+              firstUnit = widget.currencyModel?[firstIndex].unit;
+              secondUnit = widget.currencyModel?[secondIndex].unit;
+              firstCodeTo = widget.currencyModel?[firstIndex].codeTo;
               secondCodeTo =
                   widget.currencyModel?[secondIndex].codeTo.toString();
               secondRate = widget.currencyModel?[secondIndex].rate.toString();
+              var first = widget.currencyModel?[firstIndex].rate;
+              var second = widget.currencyModel![secondIndex].rate;
+              secondDivision = (second! / first!);
+              division = first / second;
+              var two = int.parse(_firstFromController.text);
+              sum = (two * division! * secondUnit!);
+              firstOneRate = division! * secondUnit!;
             });
           },
           items: secondListCurrency
@@ -232,7 +236,7 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
                             color: const Color(0xfff5f5dc),
                             border: Border.all(),
                             borderRadius:
-                            const BorderRadius.all(Radius.circular(10))),
+                                const BorderRadius.all(Radius.circular(10))),
                         child: TextField(
                           maxLines: 1,
                           controller: _firstFromController,
@@ -244,8 +248,11 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                                 borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.all(Radius.circular(30))),
-                            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30))),
+                            fillColor: Theme.of(context)
+                                .inputDecorationTheme
+                                .fillColor,
                             contentPadding: EdgeInsets.zero,
                             hintText: 'Введите сумму',
                           ),
@@ -268,7 +275,7 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
               padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
               child: (firstUnit != null)
                   ? Text(
-                      '${secondUnit.toString() ?? ''} ${secondCodeTo.toString() ?? ''} = ${secondRate.toString() ?? ''}${firstCodeTo.toString() ?? ''}')
+                      '${secondUnit.toString() ?? ''} ${secondCodeTo.toString() ?? ''} = ${secondDivision?.toStringAsFixed(4) ?? ''}${firstCodeTo.toString() ?? ''}')
                   : const Text(''),
             ),
           ),
@@ -329,8 +336,10 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
-              child: (secondUnit!=null)?Text(
-                  '${firstUnit.toString() ?? ''}${firstCodeTo.toString() ?? ''} = ${division?.toStringAsFixed(4) ?? 0}${secondCodeTo.toString() ?? ''}'):const Text(''),
+              child: (secondUnit != null)
+                  ? Text(
+                      '${firstUnit.toString() ?? ''}${firstCodeTo.toString() ?? ''} = ${firstOneRate?.toStringAsFixed(4) ?? 0}${secondCodeTo.toString() ?? ''}')
+                  : const Text(''),
             ),
           ),
         ],
@@ -346,97 +355,98 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
       body: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
           child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SizedBox(
-          height: 550,
-          width: 450,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const Expanded(
-                flex: 1,
-                child: Text(
-                  'Конвертер валют',
-                  style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    alignment: Alignment.center,
-                    width: 362,
-                    height: 120,
-                    decoration: BoxDecoration(
-                        color: const Color(0xffF6DEFE),
-                        border: Border.all(color: Colors.transparent),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(30))),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SvgPicture.asset(
-                            'assets/image/frame.svg',
-                            width: 30,
-                            height: 30,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                              'Все переводы курсов конвертер\n осуществляет на основе стоимости\n валют по данным ЦБ РФ.'),
-                        ),
-                      ],
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              height: 550,
+              width: 450,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Конвертер валют',
+                      style:
+                          TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 362,
+                        height: 120,
+                        decoration: BoxDecoration(
+                            color: const Color(0xffF6DEFE),
+                            border: Border.all(color: Colors.transparent),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(30))),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SvgPicture.asset(
+                                'assets/image/frame.svg',
+                                width: 30,
+                                height: 30,
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                  'Все переводы курсов конвертер\n осуществляет на основе стоимости\n валют по данным ЦБ РФ.'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: const Color(0xffD8ECFF),
+                              border: Border.all(color: Colors.transparent),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10))),
+                          child: firstRowWidget()),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: const Color(0xffF6DEFE),
+                              border: Border.all(color: Colors.transparent),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10))),
+                          child: secondRowWidget()),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
+                      child: Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(
+                            'Данные за $now',
+                            style: const TextStyle(color: Colors.black38),
+                          )),
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: const Color(0xffD8ECFF),
-                          border: Border.all(color: Colors.transparent),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      child: firstRowWidget()),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: const Color(0xffF6DEFE),
-                          border: Border.all(color: Colors.transparent),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      child: secondRowWidget()),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
-                  child: Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        'Данные за $now',
-                        style: const TextStyle(color: Colors.black38),
-                      )),
-                ),
-              ),
-            ],
-          ),
-        ),
-      )),
+            ),
+          )),
     );
   }
 }
