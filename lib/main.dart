@@ -6,6 +6,7 @@ import 'package:list_blocs_app/presentation/counter_screen.dart';
 import 'package:list_blocs_app/presentation/currency_screen.dart';
 import 'package:list_blocs_app/presentation/github_screen.dart';
 import 'package:list_blocs_app/presentation/room_screen.dart';
+import 'package:list_blocs_app/presentation/socket_screen.dart';
 import 'package:list_blocs_app/presentation/user_screen.dart';
 import 'package:list_blocs_app/presentation/weather_screen.dart';
 
@@ -20,6 +21,8 @@ import 'blocs/bloc_hotel/bloc_hotel.dart';
 import 'blocs/bloc_hotel/hotel_event.dart';
 import 'blocs/bloc_room/bloc_room.dart';
 import 'blocs/bloc_room/room_event.dart';
+import 'blocs/bloc_socket/bloc_socket.dart';
+import 'blocs/bloc_socket/socket_event.dart';
 import 'blocs/bloc_user/user_bloc.dart';
 import 'blocs/bloc_user/user_event.dart';
 import 'blocs/bloc_weather/bloc_weather.dart';
@@ -27,6 +30,7 @@ import 'blocs/bloc_weather/weather_event.dart';
 import 'data/api/cafe_api.dart';
 import 'data/db/dao/user_dao.dart';
 import 'data/repository/cafe_repository.dart';
+import 'data/repository/socket_repository.dart';
 import 'di_container/di.dart';
 import 'presentation/hotel_screen.dart';
 
@@ -40,8 +44,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final CatalogRepositoryImpl catalogRepositoryImpl =
-      (CatalogRepositoryImpl(CafeService()));
+  final CatalogRepositoryImpl catalogRepositoryImpl = (CatalogRepositoryImpl(CafeService()));
+  final SocketRepositoryImpl socketRepositoryImpl = (SocketRepositoryImpl());
   final UserDao userDao = UserDao();
 
   final list = [
@@ -53,6 +57,7 @@ class MyApp extends StatelessWidget {
     const CafeScreen(),
     const UserSrceen(),
     const CurrencyScreen(),
+    const SocketScreen(),
   ];
 
   _elevationButton(screen, context) {
@@ -88,31 +93,27 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
         providers: [
           BlocProvider<CafeBloc>(
-              create: (context) => CafeBloc(catalogRepositoryImpl)
-                ..add(const CafeEvent.fetch())),
+              create: (context) => CafeBloc(catalogRepositoryImpl)..add(const CafeEvent.fetch())),
           BlocProvider<CounterBloc>(create: (context) => CounterBloc()),
           BlocProvider<GitHubBloc>(
-              create: (context) =>
-                  GitHubBloc()..add(const GitHubEvent.initial())),
+              create: (context) => GitHubBloc()..add(const GitHubEvent.initial())),
           BlocProvider<HotelBloc>(
-              create: (context) =>
-                  HotelBloc()..add(const HotelEvent.initial())),
-          BlocProvider<RoomBloc>(
-              create: (context) => RoomBloc()..add(const RoomEvent.initial())),
+              create: (context) => HotelBloc()..add(const HotelEvent.initial())),
+          BlocProvider<RoomBloc>(create: (context) => RoomBloc()..add(const RoomEvent.initial())),
           BlocProvider<WeatherBloc>(
-              create: (context) =>
-                  WeatherBloc()..add(const WeatherEvent.initial())),
+              create: (context) => WeatherBloc()..add(const WeatherEvent.initial())),
           BlocProvider<UserBloc>(
-              create: (context) =>
-                  UserBloc(userDao)..add(const UserEvent.fetch())),
+              create: (context) => UserBloc(userDao)..add(const UserEvent.fetch())),
           BlocProvider<CurrencyBloc>(
+              create: (context) => CurrencyBloc()..add(const CurrencyEvent.initial())),
+          BlocProvider<SocketBloc>(
               create: (context) =>
-                  CurrencyBloc()..add(const CurrencyEvent.initial())),
+                  SocketBloc(socketRepositoryImpl)..add(const SocketEvent.connect())),
         ],
         child: MaterialApp(
           title: 'Flutter Bloc Example',
           home: Padding(
-            padding: const EdgeInsets.fromLTRB(0,50,0,0),
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: ListView.builder(
                 itemCount: list.length,
                 itemBuilder: (BuildContext context, int index) {

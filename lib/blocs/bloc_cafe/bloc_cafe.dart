@@ -36,19 +36,6 @@ class CafeBloc extends Bloc<CafeEvent, CafeState> {
     );
   }
 
-  _fetch(
-      AddCafeEvent event,
-      Emitter<CafeState> emit) async {
-    emit(const CafeState.loading());
-    try {
-      // todo реализовать репозиторий для получения кафе
-      final cafes = await catalogRepository.getCafes();
-      emit(CafeState.data(cafe: cafes));
-    } catch (e) {
-      emit(CafeState.error(e.toString()));
-    }
-  }
-
   void _onAddCafeEvent(
       AddCafeEvent event,
       Emitter<CafeState> emit,

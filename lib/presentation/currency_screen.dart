@@ -52,7 +52,6 @@ class _CurrencyScreenState extends State<CurrencyScreen> {
               orElse: () => const SizedBox(),
             );
           },
-        )
-    );
+        ));
   }
 }

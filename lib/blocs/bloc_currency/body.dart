@@ -8,10 +8,10 @@ import '../../main.dart';
 class CurrencyWidget extends StatefulWidget {
   const CurrencyWidget({
     Key? key,
-    required this.currencyModel,
+    required this.model,
   }) : super(key: key);
 
-  final List<CurrencyModel>? currencyModel;
+  final List<CurrencyModel>? model;
 
   @override
   State<CurrencyWidget> createState() => _CurrencyWidgetState();
@@ -82,9 +82,9 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
   }
 
   Future<List<String>?> addFirstNameList() async {
-    for (int i = 0; i < widget.currencyModel!.length; i++) {
+    for (int i = 0; i < widget.model!.length; i++) {
       setState(() {
-        firstListCurrency?.add(widget.currencyModel![i].codeTo.toString());
+        firstListCurrency?.add(widget.model![i].codeTo.toString());
       });
     }
     Future.delayed(const Duration(seconds: 1)); // пример задержки
@@ -92,9 +92,9 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
   }
 
   Future<List<String>?> addSecondNameList() async {
-    for (int i = 0; i < widget.currencyModel!.length; i++) {
+    for (int i = 0; i < widget.model!.length; i++) {
       setState(() {
-        secondListCurrency?.add(widget.currencyModel![i].codeTo.toString());
+        secondListCurrency?.add(widget.model![i].codeTo.toString());
       });
     }
     Future.delayed(const Duration(seconds: 1)); // пример задержки
@@ -170,15 +170,15 @@ class _CurrencyWidgetState extends State<CurrencyWidget> {
               currency = value!;
               _secondSetLanguage(value.toString());
               secondIndex = secondListCurrency?.indexOf(value) ?? 0;
-              firstUnit = widget.currencyModel?[firstIndex].unit;
-              secondUnit = widget.currencyModel?[secondIndex].unit;
-              firstCodeTo = widget.currencyModel?[firstIndex].codeTo;
+              firstUnit = widget.model?[firstIndex].unit;
+              secondUnit = widget.model?[secondIndex].unit;
+              firstCodeTo = widget.model?[firstIndex].codeTo;
               secondCodeTo =
-                  widget.currencyModel?[secondIndex].codeTo.toString();
-              secondRate = widget.currencyModel?[secondIndex].rate.toString();
-              var first = widget.currencyModel?[firstIndex].rate;
+                  widget.model?[secondIndex].codeTo.toString();
+              secondRate = widget.model?[secondIndex].rate.toString();
+              var first = widget.model?[firstIndex].rate;
               var fistDev = first!/firstUnit!;
-              var second = widget.currencyModel![secondIndex].rate;
+              var second = widget.model![secondIndex].rate;
               var secondDev = second!/secondUnit!;
               secondDivision = (secondDev / fistDev)*secondUnit!;
               division = fistDev / secondDev;
@@ -508,7 +508,7 @@ class _CurrencyBodyState extends State<CurrencyBody> {
                 body: TabBarView(
                   children: [
                     CurrencyWidget(
-                      currencyModel: widget.currencyModel,
+                      model: widget.currencyModel,
                     ),
                     MyApp(),
                   ],

@@ -11,6 +11,7 @@ import '../data/repository/cafe_repository.dart';
 import '../data/repository/currency_repository.dart';
 import '../data/repository/github_repository.dart';
 import '../data/repository/hotel_repository.dart';
+import '../data/repository/socket_repository.dart';
 import '../data/repository/weather_repository.dart';
 
 
@@ -26,7 +27,7 @@ Future<bool?>? startGetIt(GetIt getIt) async {
   getIt.registerSingleton<UserDao>(UserDao());
   getIt.registerSingleton<CurrencyService>(CurrencyService());
   getIt.registerSingleton<CurrencyRepository>(CurrencyRepository());
-
+  getIt.registerLazySingleton(() => SocketRepositoryImpl());
   return null;
 }
 

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+
 import '../../data/models/model_currency/currency_model.dart';
 import '../../data/repository/currency_repository.dart';
 import '../../main.dart';
