@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:list_blocs_app/presentation/cafe_screen.dart';
 import 'package:list_blocs_app/presentation/counter_screen.dart';
 import 'package:list_blocs_app/presentation/currency_screen.dart';
+import 'package:list_blocs_app/presentation/device_screen.dart';
 import 'package:list_blocs_app/presentation/github_screen.dart';
 import 'package:list_blocs_app/presentation/room_screen.dart';
 import 'package:list_blocs_app/presentation/socket_screen.dart';
@@ -15,6 +16,8 @@ import 'blocs/bloc_cafe/cafe_event.dart';
 import 'blocs/bloc_counter/bloc_counter.dart';
 import 'blocs/bloc_currency/bloc_currency.dart';
 import 'blocs/bloc_currency/currency_event.dart';
+import 'blocs/bloc_device/device_bloc.dart';
+import 'blocs/bloc_device/device_event.dart';
 import 'blocs/bloc_github/bloc_github.dart';
 import 'blocs/bloc_github/github_event.dart';
 import 'blocs/bloc_hotel/bloc_hotel.dart';
@@ -23,12 +26,16 @@ import 'blocs/bloc_room/bloc_room.dart';
 import 'blocs/bloc_room/room_event.dart';
 import 'blocs/bloc_socket/bloc_socket.dart';
 import 'blocs/bloc_socket/socket_event.dart';
+import 'blocs/bloc_table/bloc_table.dart';
+import 'blocs/bloc_table/table_event.dart';
 import 'blocs/bloc_user/user_bloc.dart';
 import 'blocs/bloc_user/user_event.dart';
 import 'blocs/bloc_weather/bloc_weather.dart';
 import 'blocs/bloc_weather/weather_event.dart';
 import 'data/api/cafe_api.dart';
 import 'data/db/dao/user_dao.dart';
+import 'data/db_table/dao_table.dart';
+import 'data/db_table/device_dao.dart';
 import 'data/repository/cafe_repository.dart';
 import 'data/repository/socket_repository.dart';
 import 'di_container/di.dart';
@@ -47,6 +54,8 @@ class MyApp extends StatelessWidget {
   final CatalogRepositoryImpl catalogRepositoryImpl = (CatalogRepositoryImpl(CafeService()));
   final SocketRepositoryImpl socketRepositoryImpl = (SocketRepositoryImpl());
   final UserDao userDao = UserDao();
+  final DeviceDao deviceDao = DeviceDao();
+  final TableDao tableDao = TableDao();
 
   final list = [
     CounterPage(),
@@ -58,6 +67,7 @@ class MyApp extends StatelessWidget {
     const UserSrceen(),
     const CurrencyScreen(),
     const SocketScreen(),
+    const DeviceScreen(),
   ];
 
   _elevationButton(screen, context) {
@@ -109,6 +119,10 @@ class MyApp extends StatelessWidget {
           BlocProvider<SocketBloc>(
               create: (context) =>
                   SocketBloc(socketRepositoryImpl)..add(const SocketEvent.connect())),
+          BlocProvider<DeviceBloc>(
+              create: (context) => DeviceBloc(deviceDao)..add(const DeviceEvent.initial())),
+          BlocProvider<TableBloc>(
+              create: (context) => TableBloc(tableDao)..add(const TableEvent.initial())),
         ],
         child: MaterialApp(
           title: 'Flutter Bloc Example',

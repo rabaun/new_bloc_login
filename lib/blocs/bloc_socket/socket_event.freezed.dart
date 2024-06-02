@@ -19,7 +19,7 @@ mixin _$SocketEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() connect,
-    required TResult Function(String? data) sendData,
+    required TResult Function() sendData,
     required TResult Function() startUdp,
     required TResult Function() receiveData,
   }) =>
@@ -27,7 +27,7 @@ mixin _$SocketEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? connect,
-    TResult? Function(String? data)? sendData,
+    TResult? Function()? sendData,
     TResult? Function()? startUdp,
     TResult? Function()? receiveData,
   }) =>
@@ -35,7 +35,7 @@ mixin _$SocketEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? connect,
-    TResult Function(String? data)? sendData,
+    TResult Function()? sendData,
     TResult Function()? startUdp,
     TResult Function()? receiveData,
     required TResult orElse(),
@@ -123,7 +123,7 @@ class _$Connect implements Connect {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() connect,
-    required TResult Function(String? data) sendData,
+    required TResult Function() sendData,
     required TResult Function() startUdp,
     required TResult Function() receiveData,
   }) {
@@ -134,7 +134,7 @@ class _$Connect implements Connect {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? connect,
-    TResult? Function(String? data)? sendData,
+    TResult? Function()? sendData,
     TResult? Function()? startUdp,
     TResult? Function()? receiveData,
   }) {
@@ -145,7 +145,7 @@ class _$Connect implements Connect {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? connect,
-    TResult Function(String? data)? sendData,
+    TResult Function()? sendData,
     TResult Function()? startUdp,
     TResult Function()? receiveData,
     required TResult orElse(),
@@ -203,8 +203,6 @@ abstract class _$$SendDataCopyWith<$Res> {
   factory _$$SendDataCopyWith(
           _$SendData value, $Res Function(_$SendData) then) =
       __$$SendDataCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String? data});
 }
 
 /// @nodoc
@@ -213,84 +211,60 @@ class __$$SendDataCopyWithImpl<$Res>
     implements _$$SendDataCopyWith<$Res> {
   __$$SendDataCopyWithImpl(_$SendData _value, $Res Function(_$SendData) _then)
       : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? data = freezed,
-  }) {
-    return _then(_$SendData(
-      data: freezed == data
-          ? _value.data
-          : data // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$SendData implements SendData {
-  const _$SendData({required this.data});
-
-  @override
-  final String? data;
+  const _$SendData();
 
   @override
   String toString() {
-    return 'SocketEvent.sendData(data: $data)';
+    return 'SocketEvent.sendData()';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SendData &&
-            (identical(other.data, data) || other.data == data));
+        (other.runtimeType == runtimeType && other is _$SendData);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, data);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SendDataCopyWith<_$SendData> get copyWith =>
-      __$$SendDataCopyWithImpl<_$SendData>(this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() connect,
-    required TResult Function(String? data) sendData,
+    required TResult Function() sendData,
     required TResult Function() startUdp,
     required TResult Function() receiveData,
   }) {
-    return sendData(data);
+    return sendData();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? connect,
-    TResult? Function(String? data)? sendData,
+    TResult? Function()? sendData,
     TResult? Function()? startUdp,
     TResult? Function()? receiveData,
   }) {
-    return sendData?.call(data);
+    return sendData?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? connect,
-    TResult Function(String? data)? sendData,
+    TResult Function()? sendData,
     TResult Function()? startUdp,
     TResult Function()? receiveData,
     required TResult orElse(),
   }) {
     if (sendData != null) {
-      return sendData(data);
+      return sendData();
     }
     return orElse();
   }
@@ -334,12 +308,7 @@ class _$SendData implements SendData {
 }
 
 abstract class SendData implements SocketEvent {
-  const factory SendData({required final String? data}) = _$SendData;
-
-  String? get data;
-  @JsonKey(ignore: true)
-  _$$SendDataCopyWith<_$SendData> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory SendData() = _$SendData;
 }
 
 /// @nodoc
@@ -380,7 +349,7 @@ class _$StartUdp implements StartUdp {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() connect,
-    required TResult Function(String? data) sendData,
+    required TResult Function() sendData,
     required TResult Function() startUdp,
     required TResult Function() receiveData,
   }) {
@@ -391,7 +360,7 @@ class _$StartUdp implements StartUdp {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? connect,
-    TResult? Function(String? data)? sendData,
+    TResult? Function()? sendData,
     TResult? Function()? startUdp,
     TResult? Function()? receiveData,
   }) {
@@ -402,7 +371,7 @@ class _$StartUdp implements StartUdp {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? connect,
-    TResult Function(String? data)? sendData,
+    TResult Function()? sendData,
     TResult Function()? startUdp,
     TResult Function()? receiveData,
     required TResult orElse(),
@@ -494,7 +463,7 @@ class _$ReceiveData implements ReceiveData {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() connect,
-    required TResult Function(String? data) sendData,
+    required TResult Function() sendData,
     required TResult Function() startUdp,
     required TResult Function() receiveData,
   }) {
@@ -505,7 +474,7 @@ class _$ReceiveData implements ReceiveData {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? connect,
-    TResult? Function(String? data)? sendData,
+    TResult? Function()? sendData,
     TResult? Function()? startUdp,
     TResult? Function()? receiveData,
   }) {
@@ -516,7 +485,7 @@ class _$ReceiveData implements ReceiveData {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? connect,
-    TResult Function(String? data)? sendData,
+    TResult Function()? sendData,
     TResult Function()? startUdp,
     TResult Function()? receiveData,
     required TResult orElse(),

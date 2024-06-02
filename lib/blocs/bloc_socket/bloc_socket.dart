@@ -15,7 +15,6 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     on<Connect>(_onConnectEvent);
     on<SendData>(_onSendDataEvent);
     on<ReceiveData>(_onReceiveDataEvent); // Добавляем обработчик для события получения данных
-    on<StartUdp>(_onStartUdpEvent); // Добавляем обработчик для запуска UDP
   }
 
   void _onConnectEvent(
@@ -37,8 +36,8 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     Emitter<SocketState> emit,
   ) async {
     try {
-      List<int> data = utf8.encode('TEST');
-      await socketRepository.sendData("255.255.255.255", 8889, data);
+      List<int> data = utf8.encode('ЭТО МОЙ НОВЫЙ TEST');
+      await socketRepository.sendData(data);
       emit(const DataSentSocketState());
     } catch (e, stackTrace) {
       emit(SocketState.error(e.toString()));
@@ -50,8 +49,10 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     Emitter<SocketState> emit,
   ) async {
     try {
+      socketRepository = getIt.get<SocketRepositoryImpl>();
+      socketRepository = SocketRepositoryImpl();
       receivedData = await socketRepository.receiveData(); // Получаем данные от сокета
-      print("received $receivedData");
+      print("это ReceiveData received $receivedData");
       emit(DataReceivedSocketState(
           receivedData: receivedData)); // Создаем состояние с полученными данными
     } catch (e, stackTrace) {
@@ -59,19 +60,4 @@ class SocketBloc extends Bloc<SocketEvent, SocketState> {
     }
   }
 
-  void _onStartUdpEvent(
-    StartUdp event,
-    Emitter<SocketState> emit,
-  ) async {
-    try {
-      // Вызовите метод udpStart() из вашего SocketRepositoryImpl
-      socketRepository = getIt.get<SocketRepositoryImpl>();
-      socketRepository = SocketRepositoryImpl();
-      receivedData = await socketRepository.udpDataStart();
-      print("это блок received $receivedData");
-      emit(UdpStartedSocketState(udpData: receivedData));
-    } catch (e, stackTrace) {
-      emit(SocketState.error(e.toString()));
-    }
-  }
 }

@@ -6,9 +6,7 @@ part 'socket_event.freezed.dart';
 class SocketEvent with _$SocketEvent {
   const factory SocketEvent.connect() = Connect;
 
-  const factory SocketEvent.sendData({
-    required String? data,
-  }) = SendData;
+  const factory SocketEvent.sendData() = SendData;
 
   const factory SocketEvent.startUdp() = StartUdp;
 

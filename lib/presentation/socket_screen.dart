@@ -14,11 +14,11 @@ class SocketScreen extends StatefulWidget {
 }
 
 class _SocketScreenState extends State<SocketScreen> {
-
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<SocketBloc>(context).add(const SocketEvent.connect());
-    BlocProvider.of<SocketBloc>(context).add(const SocketEvent.startUdp());
+    BlocProvider.of<SocketBloc>(context).add(const SocketEvent.receiveData());
+    BlocProvider.of<SocketBloc>(context).add(const SocketEvent.sendData());
 
     return Scaffold(
       appBar: AppBar(
@@ -40,10 +40,10 @@ class _SocketScreenState extends State<SocketScreen> {
           }
         },
         builder: (context, state) {
-          if (state is UdpStartedSocketState) {
-            print('Это скрин ${state.udpData}');
+          if (state is DataReceivedSocketState) {
+            print('Это скрин ${state.receivedData}');
             return BodySocket(
-              receivedData: state.udpData,
+              receivedData: state.receivedData,
             );
           } else {
             return const Center(child: CircularProgressIndicator());

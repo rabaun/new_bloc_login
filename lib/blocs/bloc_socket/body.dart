@@ -12,7 +12,7 @@ class BodySocket extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<SocketBloc>(context).add(const SocketEvent.connect());
     BlocProvider.of<SocketBloc>(context).add(const SocketEvent.receiveData());
-    BlocProvider.of<SocketBloc>(context).add(const SocketEvent.startUdp());
+    BlocProvider.of<SocketBloc>(context).add(const SocketEvent.sendData());
 
     return Scaffold(
       body: Center(
